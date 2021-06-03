@@ -1,0 +1,51 @@
+#!/bin/bash
+#insta485install
+
+# Stop on errors
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
+set -x
+
+# Create python virtual env
+python3 -m venv env
+
+# Activate env
+set +u
+source env/bin/activate
+set -u
+
+# Install nodeenv
+pip install nodeenv
+
+# Install JavaScript virtual environment
+nodeenv --python-virtualenv
+
+# Deactivate and reactivate the Python venv
+set +u
+deactivate
+source env/bin/activate
+set -u
+
+# Install the latest Chromdriver. (Automatically download either macOS or Linux version)
+mkdir -p ${VIRTUAL_ENV}/tmp
+pushd ${VIRTUAL_ENV}/tmp
+if [ `uname -s` = "Darwin" ]; then
+  CHROMEDRIVER_ARCH=mac64
+  CHROME_EXE="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+else
+  CHROMEDRIVER_ARCH=linux64
+  CHROME_EXE=google-chrome
+fi
+CHROME_MAJOR_VERSION=`"${CHROME_EXE}" --version | awk '{print $NF}' | cut -d. -f1`
+CHROMEDRIVER_VERSION=`curl https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}`
+wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_${CHROMEDRIVER_ARCH}.zip
+unzip chromedriver_${CHROMEDRIVER_ARCH}.zip
+mv chromedriver ${VIRTUAL_ENV}/bin/
+popd
+
+# Install back end
+pip install -r requirements.txt
+pip install -e .
+
+# Install front end
+npm install .

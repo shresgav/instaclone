@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head> 
+<body>
+    <div class="header">
+        <a id="home" href="/">Insta485</a>
+        <ul>
+            <li><a id="exp" href="/explore/">explore</a></li>
+            <li><a id="user" href="/u/{{ logname }}/">{{ logname }}</a></li>
+        </ul>
+    </div>
+
+    {% for user in users %}
+        <img src="/uploads/{{ user.filename }}" alt="user img">
+        <a href="/u/{{ user.username }}/"> {{ user.username }}</a>
+        <form action="/explore/" method="post" enctype="multipart/form-data">
+          <input type="submit" name="follow" value="follow"/>
+          <input type="hidden" name="username" value="{{ user.username }}"/>
+        </form>
+    {% endfor %}
+</body>

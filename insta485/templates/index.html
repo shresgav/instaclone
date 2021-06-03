@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<!-- Plain old HTML and jinja2 nav bar goes here -->
+<div class="header">
+    <a id="home" href="/">Insta485</a>
+    <ul>
+        <li><a id="exp" href="/explore/">explore</a></li>
+        <li><a id="user" href="/u/{{ logname }}/">{{ logname }}</a></li>
+    </ul>
+</div>
+
+<div id="reactEntry">
+    Loading ...
+</div>
+<!-- Load JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
+</body>
+</html>

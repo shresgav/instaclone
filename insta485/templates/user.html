@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <!-- style left corner -->
+        <a id="home" href="/">Insta485</a>
+
+        <!-- style right corner -->
+        <ul>
+            <li><a id="exp" href="/explore/">explore</a></li>
+            <li><a id="user" href="/u/{{ logname }}/">{{ logname }}</a></li>
+        </ul>
+    </div>
+    
+    <h2> {{ username }} </h2>
+    {% if logname == username %}
+        <h3><a href="/accounts/edit/">Edit profile</a></h3>
+        <form action="/accounts/logout/" method="post" enctype="multipart/form-data">
+          <input type="submit" name="logout" value="Logout"/>
+        </form>
+        <form action="/u/{{ logname }}/" method="post" enctype="multipart/form-data">
+          <input type="file" name="file">
+          <input type="submit" name="create_post" value="upload new post"/>
+        </form>
+    {% endif %}
+    <div class="relationships">
+        {% if total_posts == 1 %}
+            <p> {{ total_posts }} post </p>
+        {% else %}
+            <p> {{ total_posts }} posts </p>
+        {% endif %}
+        {% if followers == 1 %}
+            <a href="/u/{{ username }}/followers/"> {{ followers }} follower </a>
+        {% else %}
+            <a href="/u/{{ username }}/followers/"> {{ followers }} followers </a>
+        {% endif %}
+        <a href="/u/{{ username }}/following/"> {{ following }} following </a>
+        {% if  logname != username  %}
+            {% if logname_follows_username %}
+                <p> following </p>
+                <form action="/u/{{ logname }}/" method="post" enctype="multipart/form-data">
+                  <input type="submit" name="unfollow" value="unfollow"/>
+                  <input type="hidden" name="username" value="{{ username }}"/>
+                </form>
+            {% else %}
+                <p> not following </p>
+                <form action="/u/{{ logname }}/" method="post" enctype="multipart/form-data">
+                  <input type="submit" name="follow" value="follow"/>
+                  <input type="hidden" name="username" value="{{ username }}"/>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+    <h6> {{ fullname }} </h6>
+    
+    {% for post in posts %}
+    <div class="u_posts">
+        <a href="/p/{{ post.postid }}/">
+        <img src="/uploads/{{ post.filename }}" alt="user Post">
+        </a>
+    </div>
+    {% endfor %}
+</body>

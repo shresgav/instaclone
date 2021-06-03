@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>insta485</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <!-- style left corner -->
+        <a id="home" href="/">Insta485</a>
+
+        <!-- style right corner -->
+        <ul>
+            <li><a id="exp" href="/explore/">explore</a></li>
+            <li><a id="user" href="/u/{{ logname }}/">{{ logname }}</a></li>
+        </ul>
+	</div>
+	
+	{% for post in posts %}
+		<div class="post">
+			<a href="/u/{{ post.owner }}/">
+			<img src="/uploads/{{ post.u_file }}" alt="awdeorio avi"> {{ post.owner }}
+			</a>
+			<a href="/p/{{ post.postid }}/"> {{ humanize(post.created) }} </a>
+
+			<a href="/p/{{ post.postid }}/">
+			<img src="/uploads/{{ post.p_file }}" alt="user post">
+		</a>
+		
+		{% if post.owner == logname %}
+			<form action="/p/{{ post.postid }}/" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="postid" value="{{ post.postid }}"/>
+				<input type="submit" name="delete" value="delete this post"/>
+			</form>
+		{% endif %}
+
+		{% if post.likes == 1 %}
+			<p> {{ post.likes }} like </p>
+		{% elif post.likes != 1 %}
+			<p> {{ post.likes }} likes </p>
+		{% endif %}
+		
+		{% if not has_liked_post(post.postid) %}
+		<form action="/p/{{ post.postid }}/" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="postid" value="{{ post.postid }}"/>
+		<input type="submit" name="like" value="like"/>
+		</form>
+		{% else %}
+		<form action="/p/{{ post.postid }}/" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="postid" value="{{ post.postid }}"/>
+		<input type="submit" name="unlike" value="unlike"/>
+		</form>
+		{% endif %}
+
+		{% for comment in comments %}
+			{% if comment.postid == post.postid %}
+				<div class="comment">
+				<a href="/u/{{ comment.owner }}/"> {{ comment.owner }} </a>
+				<p> {{ comment.text }} </p>
+				</div>
+			{% endif %}
+			{% if comment.owner == logname and comment.postid == post.postid%}
+				<form action="/p/{{ post.postid }}/" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="commentid" value="{{ comment.commentid }}"/>
+					<input type="submit" name="uncomment" value="delete"/>
+				</form>
+			{% endif %}
+		{% endfor %}
+		<form action="/p/{{ post.postid }}/" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="postid" value="{{post.postid}}"/>
+			<input type="text" name="text"/>
+			<input type="submit" name="comment" value="comment"/>
+		</form>
+		</div>
+	{% endfor %}
+</body>

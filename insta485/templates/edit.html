@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>insta485</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <a id="home" href="/">Insta485</a>
+        <ul>
+            <li><a id="exp" href="/explore/">explore</a></li>
+            <li><a id="user" href="/u/{{ logname }}/">{{ logname }}</a></li>
+        </ul>
+    </div>
+    
+    <form action="/accounts/edit/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="text" name="fullname" value="{{fullname}}"/>
+        <input type="text" name="email" value="{{email}}"/>
+        <input type="submit" name="update" value="submit"/>
+    </form>
+
+    <a id="password" href="/accounts/password/">password</a>
+    <a href="/accounts/delete/">delete</a>
+</body>
